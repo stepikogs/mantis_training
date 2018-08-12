@@ -2,10 +2,7 @@ __author__ = 'George Stepiko'
 import pytest
 from fixture.application import Application
 import json
-import jsonpickle
 import os.path
-import importlib
-from fixture.db import DbFixture
 
 fixture = None
 target = None
@@ -20,18 +17,15 @@ def load_config(file):
     return target
 
 
-@pytest.fixture(scope='session')
-def db(request):
-    db_config = load_config(request.config.getoption('--target'))['db']
-    dbfixture = DbFixture(host=db_config['host'],
-                          name=db_config['name'],
-                          user=db_config['user'],
-                          password=db_config['password'])
-
-    def finik():
-        dbfixture.destroy()
-    request.addfinalizer(finik)
-    return dbfixture
+@pytest.fixture  # (scope='session')
+def app(request):
+    global fixture
+    web_config = load_config(request.config.getoption('--target'))['web']
+    browser = request.config.getoption('--browser')
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser=browser, base_url=web_config['baseUrl'])
+    fixture.session.ensure_login(username=web_config['username'], password=web_config['password'])
+    return fixture
 
 
 @pytest.fixture(scope='session', autouse=True)
