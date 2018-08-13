@@ -22,12 +22,13 @@ def load_config(file):
 def config(request):
     return load_config(request.config.getoption('--target'))
 
+
 @pytest.fixture  # (scope='session')
 def app(request, config):
     global fixture
     browser = request.config.getoption('--browser')
     if fixture is None or not fixture.is_valid():
-        fixture = Application(browser=browser, base_url=config['web']['baseUrl'])
+        fixture = Application(browser=browser, config=config)
     # fixture.session.ensure_login(username=web_config['username'], password=web_config['password'])
     return fixture
 

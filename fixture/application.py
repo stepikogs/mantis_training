@@ -4,12 +4,13 @@ __author__ = 'George Stepiko'
 from selenium import webdriver
 from fixture.session import SessionHelper
 from fixture.project import ProjectHelper
+from fixture.james import JamesHelper
 
 
 class Application:
 
     # fixture methods
-    def __init__(self, browser, base_url):
+    def __init__(self, browser, config):
         if browser == 'firefox':
             self.wd = webdriver.Firefox(capabilities={"marionette": False})
         elif browser == 'chrome':
@@ -20,7 +21,9 @@ class Application:
             raise ValueError('unrecognized browser %s' % browser)
         self.session = SessionHelper(self)
         self.project = ProjectHelper(self)
-        self.base_url = base_url
+        self.james = JamesHelper(self)
+        self.config = config
+        self.base_url = config['web']['baseUrl']
 
     def is_valid(self):
         try:
