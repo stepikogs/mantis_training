@@ -29,7 +29,6 @@ class SoapHelper:
             pass
         for record in raw_list:
             project_list.append(self.parse_for_project(record))
-        # return raw_list
         return project_list
 
     # service

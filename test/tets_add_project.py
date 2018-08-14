@@ -24,10 +24,3 @@ def test_add_project(app):
     # new_projects = app.project.get_list()  # get list from web
     old_projects.append(subj)
     assert sorted(new_projects, key=lambda p: p.name) == sorted (old_projects, key=lambda p: p.name)
-
-
-def test_dummy(app):
-    user = 'administrator'
-    pswd = 'root'
-    old_projects = app.soap.get_project_list_by_user(user, pswd)  # get list by soap
-    pass
